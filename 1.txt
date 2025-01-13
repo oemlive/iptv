@@ -579,9 +579,6 @@ CCTV女性时尚,http://111.61.236.247:9081/hls/59/index.m3u8$LR•IPV4
 南方卫视,http://114.252.238.87:8000/udp/239.3.1.161:8001$LR•IPV4『线路2』
 南方卫视,http://123.113.187.204:8000/udp/239.3.1.161:8001$LR•IPV4『线路3』
 Test,#genre#
-CHC影迷电影,http://58.19.38.162:9901/tsfile/live/0119_1.m3u8$LR•IPV4『线路1』
-CHC影迷电影,http://59.173.243.210:9901/tsfile/live/0119_1.m3u8$LR•IPV4『线路2』
-新视觉,http://120.76.248.139/live/bfgd/4200000249.m3u8$LR•IPV4
 凤凰资讯,https://ali.hlspull.yximgs.com/live/diyp_fh1.flv$LR•IPV4『线路1』
 凤凰资讯,http://223.105.252.59/PLTV/3/224/3221228524/index.m3u8$LR•IPV4『线路2』
 凤凰资讯,http://www.erbao1981.top:8188/udp/239.76.246.134:1234$LR•IPV4『线路3』
