@@ -3,4 +3,4 @@
  * window.SOURCE_HUNTER_API = 'https://source-hunter-api.example.workers.dev';
  * Do NOT put a GitHub token here.
  */
-window.SOURCE_HUNTER_API = 'https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json';
+window.SOURCE_HUNTER_API = '';
