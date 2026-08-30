@@ -1,0 +1,19 @@
+rules:
+  - keyword: CCTV
+    category: 央视
+    priority: 100
+  - keyword: 央视
+    category: 央视
+    priority: 100
+  - keyword: 卫视
+    category: 卫视
+    priority: 90
+  - keyword: TVB
+    category: 港台
+    priority: 90
+  - keyword: 凤凰
+    category: 港台
+    priority: 90
+blacklist: []
+whitelist: []
+strict_whitelist: false
