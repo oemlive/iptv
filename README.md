@@ -1,34 +1,41 @@
-# WEB后台管理 · Worker 可选
+# WEB后台管理 · Worker 可选 · 无 Worker 静态模式
 
-本版采用双模式设计：
+## 默认运行方式
 
-- **无 Worker 静态模式（默认）**：GitHub Pages 直接运行。无需 Cloudflare、无需后端。可读取公开入口订阅、读取浏览器允许跨域访问的订阅、频道筛选、本地保存选择、生成 M3U/TXT。
-- **Worker 管理模式（可选）**：在 `admin/config.js` 设置 `window.SOURCE_HUNTER_API` 后启用。用于 GitHub-backed 登录、选择保存、Actions 拉取和仓库管理。
-
-## GitHub Pages
-
-保持现有 Pages 地址即可：
+直接部署到 GitHub Pages：
 
 `https://oemlive.github.io/iptv/`
 
-## 无 Worker 模式（优先使用 Pages 同源 hw.json 静态缓存）
+默认不依赖 Cloudflare Worker。入口目录已经随源码内置为 `hw.json`，Pages 发布时使用同源文件：
 
-默认 `admin/config.js`：
+`https://oemlive.github.io/iptv/hw.json`
 
-```js
-window.SOURCE_HUNTER_API = '';
-```
+原始上游入口保持不变：
 
-此时页面不会要求登录，直接进入 **WEB后台管理**。
+`https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json`
 
-注意：浏览器直接读取外部订阅时，目标服务器必须允许 CORS。若某个订阅不允许浏览器跨域访问，该订阅会被跳过并在页面提示；这不是前端代码能够绕过的限制。
+GitHub Actions 会定期尝试刷新仓库内的 `hw.json`；上游暂时不可用时继续使用最后一次有效缓存，不会因此把 Pages 部署搞成 404。
+
+## 无 Worker 模式
+
+- 登录页面名称：**WEB后台管理**
+- 默认本地门禁密码：`admin`
+- 可在 `admin/config.js` 修改 `SOURCE_HUNTER_LOCAL_PASSWORD_HASH`。
+- 这是浏览器端门禁，不是安全的服务器认证；真正的管理认证请启用 Worker。
+- 订阅目录优先读取同源 `./hw.json`，不再依赖浏览器直接访问 Gitee。
+- 可以保存本机订阅/频道选择并生成 M3U/TXT。
+- 某些二级订阅本身禁止 CORS 时，浏览器无法直接拉取，这是浏览器限制；启用 Worker 后可由后端代取。
 
 ## Worker 模式
 
-将 `admin/config.js` 改为：
+在 `admin/config.js` 设置：
 
 ```js
 window.SOURCE_HUNTER_API = 'https://你的-worker.workers.dev';
 ```
 
-然后部署 `api/worker.js`。GitHub Token、管理员密码、Session Secret 仍必须作为 Worker Secrets 配置，不能写进前端。
+再按 `api/README.md` 配置 Worker Secrets。
+
+## 退出行为
+
+退出会清除本地会话并返回登录页，不刷新页面，也不会自动重新进入。
