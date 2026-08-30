@@ -74,17 +74,12 @@ function norm(u,base){u=String(u||'').trim().replace(/^['"]|['"]$/g,'');if(!u)re
 function dedupe(a,key){const m=new Map();for(const x of a){const k=key(x);if(x.url&&!m.has(k))m.set(k,x)}return [...m.values()]}
 function catalogFromJson(text,base){const o=JSON.parse(text),a=[];for(const x of (o?.lives||[])){if(!x||typeof x!=='object')continue;const u=norm(x.url,base);if(u)a.push({name:String(x.name||u),url:u,headers:x.headers||{},enabled:true,group:String(x.group||'')})}return dedupe(a,x=>x.url)}
 async function getDirect(url,allowProxy=window.SOURCE_HUNTER_ENABLE_PUBLIC_FETCH_FALLBACK!==false){
-  const direct=async u=>{const r=await fetch(u,{cache:'no-store'});const text=await r.text();return {text,type:r.headers.get('content-type')||'',url:r.url,status:r.status}};
+  const direct=async u=>{const r=await fetch(u,{cache:'no-store',redirect:'follow'});const text=await r.text();return {text,type:r.headers.get('content-type')||'',url:r.url,status:r.status}};
   const candidates=[];
-  if(url)candidates.push(url);
-  if(allowProxy){
-    for(const u of ROOT_CATALOG_FALLBACKS){try{const abs=new URL(u,location.href).href;if(!candidates.includes(abs))candidates.push(abs)}catch{}}
-    const base=candidates.slice();
-    for(const u of base){
-      candidates.push('https://api.allorigins.win/raw?url='+encodeURIComponent(u));
-      candidates.push('https://corsproxy.io/?url='+encodeURIComponent(u));
-    }
-  }
+  const add=u=>{if(!u)return;try{const abs=new URL(u,location.href).href;if(!candidates.includes(abs))candidates.push(abs)}catch{}};
+  // The built-in Gitee raw URL remains the authoritative external entry.
+  add(url);
+  for(const u of ROOT_CATALOG_FALLBACKS)add(u);
   let last=null;
   for(const u of candidates){
     try{
@@ -93,8 +88,8 @@ async function getDirect(url,allowProxy=window.SOURCE_HUNTER_ENABLE_PUBLIC_FETCH
       last=Error('HTTP '+r.status+' @ '+u);
     }catch(e){last=e}
   }
-  if(last&&/^HTTP\s+\d+/i.test(last.message||''))throw Error('入口所有通道均失败：'+last.message);
-  throw Error('Failed to fetch（入口直连及备用跨域通道均不可用）');
+  if(last)throw Error('入口获取失败：'+(last.message||last));
+  throw Error('未配置入口订阅地址');
 }
 async function discover(){const b=$('discoverBtn');b.disabled=true;status('subStatus',remote?'正在通过管理服务获取全部订阅地址…':'正在获取入口订阅目录（多地址自动容错）…','');try{let data;if(remote){data=await api('/api/discover')}else{const r=await getDirect(ROOT_CATALOG,true);const o=JSON.parse(r.text.replace(/^\uFEFF/,''));const lives=Array.isArray(o.lives)?o.lives:[];const m=new Map();for(const x of lives){if(!x||typeof x!=='object'||!x.url)continue;let u=String(x.url).trim();try{u=new URL(u,r.url).href}catch{}if(!u)continue;const row={name:String(x.name||u),url:u,headers:x.headers||{},enabled:true,group:String(x.group||''),type:x.type??0,playerType:x.playerType??null,ua:x.ua||'',epg:x.epg||'',logo:x.logo||''};if(!m.has(u))m.set(u,row)}data={sources:[...m.values()]}}subs=Array.isArray(data.sources)?data.sources:[];renderSubs();updateSubCount();status('subStatus','已获取 '+subs.length+' 个订阅地址。'+(remote?'':'（本地模式）'),'ok')}catch(e){status('subStatus','获取失败：'+(e.message||e),'bad')}finally{b.disabled=false}}
 $('discoverBtn').onclick=discover;$('subSearch').oninput=renderSubs;

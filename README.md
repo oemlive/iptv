@@ -11,7 +11,7 @@
 
 `https://oemlive.github.io/iptv/`
 
-## 无 Worker 模式
+## 无 Worker 模式（优先使用 Pages 同源 hw.json 静态缓存）
 
 默认 `admin/config.js`：
 
