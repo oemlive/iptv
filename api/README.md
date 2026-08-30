@@ -28,3 +28,6 @@ window.SOURCE_HUNTER_API = 'https://source-hunter-api.<your-subdomain>.workers.d
 The repaired admin also works without a Worker for the **获取全部订阅** operation: when `SOURCE_HUNTER_API` is empty it directly reads `SOURCE_HUNTER_ROOT_CATALOG` in browser/local mode. GitHub-backed selection, Actions dispatch, and generated-channel retrieval still require the Worker.
 
 Never put `GITHUB_TOKEN` in `admin/config.js`.
+
+
+FIX13: 本地模式退出后不再自动重新进入；公开目录直连失败时可选尝试只读跨域备用通道。
