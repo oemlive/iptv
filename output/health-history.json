@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "runs": [
+    {
+      "timestamp": "2026-08-30T07:17:35.543027+00:00",
+      "scanned": 0,
+      "alive": 0,
+      "dead": 0,
+      "timeouts": 0
+    }
+  ],
+  "sources": {}
+}
