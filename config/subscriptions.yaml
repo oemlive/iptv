@@ -1,4 +1,4 @@
 subscriptions:
   - name: 华为 IPTV JSON（内置）
     url: https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json
-    enabled: true
+    enabled: false
