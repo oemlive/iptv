@@ -1,14 +1,38 @@
-# Source Hunter PRO API bridge
+# Source Hunter Worker
 
-Cloudflare Worker only. It is **not** a GitHub login service.
+用于 GitHub Pages 管理端的安全后端桥接。GitHub Token 只放在 Cloudflare Worker Secrets，不进入网页。
 
-The admin password is used only for `https://oemlive.github.io/iptv/` and is stored as the Worker secret `ADMIN_PASSWORD`. GitHub authentication remains separate: `GITHUB_TOKEN` is a Worker-only secret and is never sent to the browser.
+## 必填变量 / Secret
 
-Required Worker secrets:
-- `ADMIN_PASSWORD`
-- `SESSION_SECRET`
-- `GITHUB_TOKEN` (fine-grained token limited to `oemlive/iptv`)
+- `ADMIN_PASSWORD`：仅用于 `https://oemlive.github.io/iptv/` 管理端。
+- `SESSION_SECRET`：随机长字符串，用于签发后台会话。
+- `GITHUB_TOKEN`：Fine-grained PAT，仅授予 `oemlive/iptv` 所需的 Contents / Actions 权限。
 
-Variables in `wrangler.toml` fix the repository to `oemlive/iptv` and the browser origin to `https://oemlive.github.io`.
+## Variables
 
-After deployment, set the Worker URL as `API_BASE` in `admin/index.html`. The browser then uses the Worker for authentication, GitHub-backed selection persistence, Actions dispatch, and remote channel data. Without it, the page remains usable in local-browser mode.
+- `REPO_OWNER=oemlive`
+- `REPO_NAME=iptv`
+- `ALLOWED_ORIGIN=https://oemlive.github.io`
+- `ROOT_CATALOG=https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json`
+
+## 部署后
+
+把 Worker URL 配置到 `admin/index.html`：
+
+```js
+window.SOURCE_HUNTER_API='https://你的-worker.workers.dev';
+```
+
+管理密码只用于 Pages 后台。它与 GitHub 账号密码完全独立。
+
+会话使用 HttpOnly Cookie，默认 30 天；刷新页面不需要重新输入密码。
+
+## API
+
+- `POST /api/login`：后台密码登录，签发 30 天 HttpOnly 会话。
+- `GET /api/session`：检查当前会话。
+- `GET /api/discover`：直接读取 hw.json，解析 `lives[]` 为完整订阅地址列表，并保存 `output/subscriptions.json`。
+- `POST /api/selection`：安全保存订阅/频道选择。
+- `POST /api/pull`：触发 GitHub Actions 的 `channels` 阶段。
+- `GET /api/run`：查询最新 Source Hunter Actions 状态。
+- `GET /api/channels`：读取最新完整候选直播源。
