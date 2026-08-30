@@ -1,11 +1,9 @@
 {
   "version": 4,
   "selected_subscriptions": [],
-  "selected_subscription_urls": [
-    "https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json"
-  ],
+  "selected_subscription_urls": [],
   "selected_channels": {},
   "excluded_channels": {},
   "default_selected": true,
-  "updated_at": "2026-08-30T07:54:16.138Z"
+  "updated_at": null
 }

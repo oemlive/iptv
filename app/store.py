@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 CATS = ['央视','卫视','港台','其他','网页']
+SELECTION_VERSION = 4
 
 def now(): return datetime.now(timezone.utc).isoformat()
 def channel_key(name, group='', category=''):
@@ -27,7 +28,17 @@ class Store:
             cols={r[1] for r in c.execute('PRAGMA table_info(sources)')}
             if 'channel_key' not in cols: c.execute('ALTER TABLE sources ADD COLUMN channel_key TEXT')
             cols={r[1] for r in c.execute('PRAGMA table_info(scans)')}
-            if 'stability_pct' not in cols: c.execute('ALTER TABLE scans ADD COLUMN stability_pct REAL')
+            scan_migrations={
+                'first_frame_ms':'REAL',
+                'stability_pct':'REAL',
+                'stability_7d':'REAL',
+                'stability_30d':'REAL',
+                'stability_90d':'REAL',
+                'consecutive_failures':'INTEGER',
+                'lifecycle':'TEXT',
+            }
+            for col,typ in scan_migrations.items():
+                if col not in cols: c.execute(f'ALTER TABLE scans ADD COLUMN {col} {typ}')
     def conn(self):
         c=sqlite3.connect(self.db_path); c.execute('PRAGMA journal_mode=WAL'); return c
     def add_sub(self,name,url,enabled=True):
@@ -91,11 +102,11 @@ class Store:
             scans=self.latest_all(); alive=sum(r['status']=='alive' for r in scans); dead=len(scans)-alive
             return {'subscriptions':subs,'sources':src,'scanned':len(scans),'alive':alive,'dead':dead}
     def load_selection(self):
-        if not self.selection_path.exists(): return {'version':2,'selected_subscriptions':[],'selected_subscription_urls':[],'selected_channels':{},'excluded_channels':{},'default_selected':True,'updated_at':None}
+        if not self.selection_path.exists(): return {'version':SELECTION_VERSION,'selected_subscriptions':[],'selected_subscription_urls':[],'selected_channels':{},'excluded_channels':{},'default_selected':True,'updated_at':None}
         try:
             d=json.loads(self.selection_path.read_text(encoding='utf-8'))
-            d.setdefault('version',2); d.setdefault('selected_subscriptions',[]); d.setdefault('selected_subscription_urls',[]); d.setdefault('selected_channels',{}); d.setdefault('excluded_channels',{}); d.setdefault('default_selected',True); return d
-        except Exception:return {'version':2,'selected_subscriptions':[],'selected_subscription_urls':[],'selected_channels':{},'excluded_channels':{},'default_selected':True,'updated_at':None}
+            d.setdefault('version',SELECTION_VERSION); d.setdefault('selected_subscriptions',[]); d.setdefault('selected_subscription_urls',[]); d.setdefault('selected_channels',{}); d.setdefault('excluded_channels',{}); d.setdefault('default_selected',True); return d
+        except Exception:return {'version':SELECTION_VERSION,'selected_subscriptions':[],'selected_subscription_urls':[],'selected_channels':{},'excluded_channels':{},'default_selected':True,'updated_at':None}
     def save_selection(self,data):
-        data=dict(data); data['version']=2; data['updated_at']=now()
+        data=dict(data); data['version']=SELECTION_VERSION; data['updated_at']=now()
         tmp=self.selection_path.with_suffix('.tmp'); tmp.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8'); tmp.replace(self.selection_path); return data

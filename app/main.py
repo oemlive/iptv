@@ -22,7 +22,7 @@ def sync_subscriptions():
     return STORE.subs()
 
 def selected_subs():
-    sync_subscriptions(); sel=STORE.load_selection(); urls=set(sel.get('selected_subscription_urls',[])); ids=set(sel.get('selected_subscriptions',[])); return [s for s in STORE.subs() if s['enabled'] and (s['url'] in urls or s['id'] in ids)]
+    sync_subscriptions(); sel=STORE.load_selection(); urls=set(sel.get('selected_subscription_urls',[])); ids=set(sel.get('selected_subscriptions',[])); return [s for s in STORE.subs() if s['enabled'] and (not urls and not ids or s['url'] in urls or s['id'] in ids)]
 
 @app.get('/',response_class=HTMLResponse)
 def home(): return (BASE/'web/index.html').read_text(encoding='utf-8')

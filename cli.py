@@ -12,7 +12,7 @@ SUB=BASE/'config/subscriptions.yaml'; SEL=BASE/'config/selection.json'; HIST=BAS
 def load_subs():
  d=yaml.safe_load(SUB.read_text(encoding='utf-8')) or {}; return d.get('subscriptions',[])
 async def main(a):
- subs=load_subs(); sel=db.load_selection(); selected=set(sel.get('selected_subscription_urls',[])); active=[x for x in subs if x.get('enabled',True) and x.get('url') in selected]; total=0
+ subs=load_subs(); sel=db.load_selection(); selected_urls=set(sel.get('selected_subscription_urls',[])); active=[x for x in subs if x.get('enabled',True) and (not selected_urls or x.get('url') in selected_urls)]; total=0
  if a.pull:
   for i,s in enumerate(active,1):
    try:
@@ -24,6 +24,6 @@ async def main(a):
  if a.scan:
   ids=[x['id'] for x in db.subs() if x['url'] in [s['url'] for s in active]]; sources=db.sources(ids); hist=load_history(HIST); rs=await Scanner(db,CFG['scanner'],hist).scan(sources); update_history(HIST,rs,CFG['health']['keep_runs']); print(json.dumps({'scanned':len(rs),'alive':sum(x['status']=='alive' for x in rs),'dead':sum(x['status']!='alive' for x in rs)},ensure_ascii=False))
  if a.export:
-  ids=[x['id'] for x in db.subs() if x['url'] in [s['url'] for s in active]]; sel=db.load_selection(); rows=selected_rows(db.latest(ids),sel); print(write_exports(rows,BASE/'output',{'version':'10.0.0','selected_channels':len(rows)}))
+  ids=[x['id'] for x in db.subs() if x['url'] in [s['url'] for s in active]]; sel=db.load_selection(); rows=selected_rows(db.latest(ids),sel); print(write_exports(rows,BASE/'output',{'version':'11.1.0','selected_channels':len(rows)}))
 if __name__=='__main__':
  p=argparse.ArgumentParser(); p.add_argument('--pull',action='store_true'); p.add_argument('--scan',action='store_true'); p.add_argument('--export',action='store_true'); asyncio.run(main(p.parse_args()))
