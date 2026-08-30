@@ -39,3 +39,8 @@ window.SOURCE_HUNTER_API = 'https://你的-worker.workers.dev';
 ## 退出行为
 
 退出会清除本地会话并返回登录页，不刷新页面，也不会自动重新进入。
+
+## FIX18
+- 无 Worker 静态模式不再要求或保存任何前端密码；打开页面即可进入后台。
+- 配置 Worker 后才启用真正的服务端管理员登录。
+- 继续使用 Pages 同源 `hw.json`，Gitee 仅作为上游入口。

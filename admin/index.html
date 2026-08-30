@@ -44,10 +44,9 @@
     </div>
     <div id="output" class="status">尚未生成输出。</div>
   </div>
-  <div class="footer">WEB后台管理 · Worker 可选 · 无 Worker 时仅使用浏览器本地模式</div>
+  <div class="footer">WEB后台管理 · Worker 可选 · 无 Worker 时使用 Pages 静态模式</div>
 </div>
 <script src="./config.js"></script><script>
-const DEFAULT_PASSWORD_HASH=String(window.SOURCE_HUNTER_LOCAL_PASSWORD_HASH||'8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8ff5a3c5d6a7c5b0');
 const API_BASE=String(window.SOURCE_HUNTER_API||'').replace(/\/$/,'');
 const BUILTIN_ROOT_CATALOG='https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json';
 const ROOT_CATALOG=String(window.SOURCE_HUNTER_ROOT_CATALOG||BUILTIN_ROOT_CATALOG).trim();
@@ -58,6 +57,8 @@ const SESSION_KEY='sh_auth_v2',SELECTION_KEY='sh_selection_v2',LOCAL_DAYS=7;
 const DEFAULT_SEL={version:4,selected_subscriptions:[],selected_subscription_urls:[],selected_channels:{},excluded_channels:{},default_selected:true,updated_at:null};
 let subs=[],channels=[],selection=loadSelection(),remote=!!API_BASE,currentCat='全部',localPullErrors=[];
 const $=id=>document.getElementById(id);
+if(!remote){$('password').style.display='none';$('loginBtn').textContent='进入静态后台';$('loginMsg').textContent='无 Worker 静态模式：无需密码，直接进入后台。';}
+
 function loadSelection(){try{return Object.assign({},DEFAULT_SEL,JSON.parse(localStorage.getItem(SELECTION_KEY)||'{}'))}catch{return {...DEFAULT_SEL}}}
 function saveLocal(){selection.version=4;selection.updated_at=new Date().toISOString();localStorage.setItem(SELECTION_KEY,JSON.stringify(selection))}
 function setLocalAuth(){localStorage.setItem(SESSION_KEY,JSON.stringify({exp:Date.now()+LOCAL_DAYS*86400000}))}
@@ -65,10 +66,10 @@ function hasLocalAuth(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)|
 function clearLocalAuth(){localStorage.removeItem(SESSION_KEY)}
 async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function api(path,opt={}){const r=await fetch(API_BASE+path,{...opt,credentials:'include',headers:{'Content-Type':'application/json',...(opt.headers||{})}});const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.message||('HTTP '+r.status));return x}
-function showApp(){ $('login').classList.add('hidden');$('app').classList.remove('hidden');renderTabs(); if(remote)loadRemoteState().catch(()=>{}); else status('subStatus','本地模式：无需管理服务，可直接读取可跨域访问的公开订阅；连接 Worker 后可启用 GitHub 管理功能。',''); }
+function showApp(){ $('login').classList.add('hidden');$('app').classList.remove('hidden');renderTabs(); if(remote)loadRemoteState().catch(()=>{}); else status('subStatus','本地静态模式：无需密码、无需 Worker，直接使用 Pages 同源 hw.json；连接 Worker 后可启用 GitHub 管理功能。',''); }
 async function tryRemoteSession(){if(!remote)return false;try{await api('/api/session');showApp();return true}catch{return false}}
-async function login(){const p=$('password').value.trim();$('loginBtn').disabled=true;$('loginMsg').textContent='正在验证…';try{if(!p)throw Error('请输入管理密码');if(remote){await api('/api/login',{method:'POST',body:JSON.stringify({password:p})})}else{const h=await sha256(p);if(h!==DEFAULT_PASSWORD_HASH)throw Error('本地模式密码错误')}setLocalAuth();showApp()}catch(e){$('loginMsg').textContent=e.message||'登录失败'}finally{$('loginBtn').disabled=false}}
-async function logout(){clearLocalAuth();if(remote)await fetch(API_BASE+'/api/logout',{method:'POST',credentials:'include'}).catch(()=>{});$('password').value='';$('loginMsg').textContent='已退出，请重新进入后台。';$('app').classList.add('hidden');$('login').classList.remove('hidden');$('password').focus()}
+async function login(){const p=$('password').value.trim();$('loginBtn').disabled=true;$('loginMsg').textContent='正在进入…';try{if(remote){if(!p)throw Error('请输入管理密码');await api('/api/login',{method:'POST',body:JSON.stringify({password:p})});setLocalAuth();showApp()}else{clearLocalAuth();showApp()}}catch(e){$('loginMsg').textContent=e.message||'登录失败'}finally{$('loginBtn').disabled=false}}
+async function logout(){clearLocalAuth();if(remote)await fetch(API_BASE+'/api/logout',{method:'POST',credentials:'include'}).catch(()=>{});$('password').value='';$('loginMsg').textContent='已退出，请重新进入后台。';$('app').classList.add('hidden');$('login').classList.remove('hidden');if(remote){$('password').style.display='block';$('loginBtn').textContent='进入后台';$('loginMsg').textContent='请输入管理密码'}else{ $('password').style.display='none';$('loginBtn').textContent='进入静态后台';$('loginMsg').textContent='无 Worker 静态模式：无需密码，直接进入后台。'} }
 $('loginBtn').onclick=login;$('password').onkeydown=e=>{if(e.key==='Enter')login()};$('logoutBtn').onclick=logout;
 function status(id,text,cls=''){const e=$(id);e.textContent=text;e.className='status '+cls}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -122,5 +123,5 @@ function chosenRows(){return channels.filter(r=>selection.selected_channels?.[r.
 function makeOutput(){let rows=chosenRows(),g=$('outGroup').value;if(g!=='all')rows=rows.filter(r=>r.category===g);let n=($('outName').value.trim()||'channels').replace(/[^\w\-一-鿿]+/g,'_'),f=$('outFormat').value,text='';if(f==='m3u'){const a=['#EXTM3U'];for(const r of rows)a.push(`#EXTINF:-1 tvg-id="${esc(r.tvg_id||'')}" tvg-logo="${esc(r.logo||'')}" group-title="${esc(r.category||'其他')}",${String(r.name||'UNKNOWN').replace(/[\r\n]/g,' ')}`,r.url||'');text=a.join('\n')+'\n'}else{text=rows.map(r=>`${String(r.name||'UNKNOWN').replace(/[\r\n]/g,' ')},${r.url||''}`).join('\n')+'\n'}const u=URL.createObjectURL(new Blob([text],{type:'text/plain;charset=utf-8'}));$('output').innerHTML=`<a href="${u}" download="${esc(n)}.${f}" style="color:#79b0ff">下载 ${esc(n)}.${f}</a> · 共 ${rows.length} 条`}
 $('makeBtn').onclick=makeOutput;
 async function loadRemoteState(){try{await api('/api/session');await loadRemoteChannels().catch(()=>{});status('subStatus','已连接管理服务。','ok')}catch(e){status('subStatus','管理服务会话已失效，请重新登录。','bad');clearLocalAuth();$('login').classList.remove('hidden');$('app').classList.add('hidden')}}
-(async function boot(){if(remote){if(await tryRemoteSession())return;$('password').focus()}else{if(hasLocalAuth())showApp();else{$('login').classList.remove('hidden');$('app').classList.add('hidden');$('password').focus()}}})();
+(async function boot(){if(remote){if(await tryRemoteSession())return;$('login').classList.remove('hidden');$('app').classList.add('hidden');$('password').focus()}else{showApp()}})();
 </script></body></html>

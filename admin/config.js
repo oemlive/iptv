@@ -15,5 +15,4 @@ window.SOURCE_HUNTER_ROOT_CATALOG_FALLBACKS = [
   'https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json'
 ];
 
-// 无 Worker 本地模式密码：仅用于前端入口门禁，不是安全认证。默认密码为 admin；可自行替换 SHA-256。
-window.SOURCE_HUNTER_LOCAL_PASSWORD_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918';
+// 无 Worker 静态模式不设置前端密码；Worker 模式由服务端 ADMIN_PASSWORD 认证。
