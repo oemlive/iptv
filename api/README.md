@@ -2,18 +2,29 @@
 
 This Worker is the server-side bridge for the GitHub Pages admin. It keeps the GitHub token in a Cloudflare Worker secret and never sends it to the browser.
 
-## Required secrets
+## Required Worker secrets
 
-- `ADMIN_PASSWORD` — password used only by `https://oemlive.github.io/iptv/`
-- `SESSION_SECRET` — long random secret used to sign the HttpOnly session cookie
-- `GITHUB_TOKEN` — fine-grained PAT for the `oemlive/iptv` repository; never place this in `admin/config.js`
+- `ADMIN_PASSWORD`
+- `SESSION_SECRET`
+- `GITHUB_TOKEN`
 
-## Deploy
+## GitHub Actions deployment (optional)
 
-1. Install Wrangler and authenticate with Cloudflare.
-2. From this directory run `wrangler deploy`.
-3. Set the three secrets with `wrangler secret put ...`.
-4. Put the deployed Worker URL into `admin/config.js` as `window.SOURCE_HUNTER_API`.
-5. Publish `admin/` with the GitHub Pages workflow.
+The repository includes `.github/workflows/deploy-worker.yml`. Add these GitHub Actions secrets before enabling automatic Worker deployment:
 
-The Worker only accepts requests whose Origin matches `ALLOWED_ORIGIN`.
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Then run the workflow manually or push a change under `api/`.
+
+## Pages configuration
+
+After the Worker is deployed, copy its `*.workers.dev` URL into `admin/config.js`:
+
+```js
+window.SOURCE_HUNTER_API = 'https://source-hunter-api.<your-subdomain>.workers.dev';
+```
+
+The repaired admin also works without a Worker for the **获取全部订阅** operation: when `SOURCE_HUNTER_API` is empty it directly reads `SOURCE_HUNTER_ROOT_CATALOG` in browser/local mode. GitHub-backed selection, Actions dispatch, and generated-channel retrieval still require the Worker.
+
+Never put `GITHUB_TOKEN` in `admin/config.js`.
