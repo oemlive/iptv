@@ -88,7 +88,12 @@ def parse_subscription_catalog(text,base):
                 'headers':headers, 'source_name':str(item.get('name') or '').strip(),
                 'player_type':item.get('playerType'), 'epg':item.get('epg') or '',
                 'logo':item.get('logo') or ''})
-        return out
+        seen=set(); unique=[]
+        for item in out:
+            u=item.get('url','')
+            if u and u not in seen:
+                seen.add(u); unique.append(item)
+        return unique
     # Generic fallback: recursively collect named URL objects only when there is no lives[] catalog.
     def walk(x,default=''):
         if isinstance(x,list):
@@ -102,7 +107,12 @@ def parse_subscription_catalog(text,base):
                 for k,v in x.items():
                     if k not in ('headers','proxy','hosts','ads'): walk(v,name if isinstance(v,str) else default)
     walk(obj)
-    return out
+    seen=set(); unique=[]
+    for item in out:
+        u=item.get('url','')
+        if u and u not in seen:
+            seen.add(u); unique.append(item)
+    return unique
 
 def parse_xml(text,base):
     out=[]; root=ET.fromstring(text)

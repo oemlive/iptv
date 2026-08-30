@@ -85,7 +85,7 @@ async def main(a):
   await discover(); return
  if stage in ('channels','auto'):
   await pull_selected()
-  export_selected()
+  export_candidates()
  if stage=='scan':
   await scan_selected(); export_selected()
  if stage=='export':

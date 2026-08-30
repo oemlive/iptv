@@ -65,7 +65,9 @@ async def pull():
             for row in STORE.sources([s['id']]):
                 cat=classify(row['name'],row.get('group_name',''),row['url'],rules.get('rules')); STORE.set_categories({row['url']:cat})
         except Exception as e: STORE.touch_fetch(s['id'],str(e)[:300]); errors.append({'subscription':s['name'],'error':str(e)[:300]})
-    return {'ok':True,'parsed':total,'subscriptions':len(subs),'errors':errors}
+    candidate=STORE.sources([s['id'] for s in subs])
+    write_exports(candidate,BASE/CFG.get('github',{}).get('output_dir','output'),{'version':'11.1.0','selected_channels':len(candidate),'selected_subscriptions':len(subs),'total_channels':len(candidate),'candidate_mode':True},'candidates',('m3u','txt'),'channels')
+    return {'ok':True,'parsed':total,'channels':len(candidate),'subscriptions':len(subs),'errors':errors}
 
 @app.get('/api/channels')
 def channels():

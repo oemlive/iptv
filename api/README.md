@@ -1,38 +1,19 @@
-# Source Hunter Worker
+# Source Hunter PRO API Worker
 
-用于 GitHub Pages 管理端的安全后端桥接。GitHub Token 只放在 Cloudflare Worker Secrets，不进入网页。
+This Worker is the server-side bridge for the GitHub Pages admin. It keeps the GitHub token in a Cloudflare Worker secret and never sends it to the browser.
 
-## 必填变量 / Secret
+## Required secrets
 
-- `ADMIN_PASSWORD`：仅用于 `https://oemlive.github.io/iptv/` 管理端。
-- `SESSION_SECRET`：随机长字符串，用于签发后台会话。
-- `GITHUB_TOKEN`：Fine-grained PAT，仅授予 `oemlive/iptv` 所需的 Contents / Actions 权限。
+- `ADMIN_PASSWORD` — password used only by `https://oemlive.github.io/iptv/`
+- `SESSION_SECRET` — long random secret used to sign the HttpOnly session cookie
+- `GITHUB_TOKEN` — fine-grained PAT for the `oemlive/iptv` repository; never place this in `admin/config.js`
 
-## Variables
+## Deploy
 
-- `REPO_OWNER=oemlive`
-- `REPO_NAME=iptv`
-- `ALLOWED_ORIGIN=https://oemlive.github.io`
-- `ROOT_CATALOG=https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json`
+1. Install Wrangler and authenticate with Cloudflare.
+2. From this directory run `wrangler deploy`.
+3. Set the three secrets with `wrangler secret put ...`.
+4. Put the deployed Worker URL into `admin/config.js` as `window.SOURCE_HUNTER_API`.
+5. Publish `admin/` with the GitHub Pages workflow.
 
-## 部署后
-
-把 Worker URL 配置到 `admin/index.html`：
-
-```js
-window.SOURCE_HUNTER_API='https://你的-worker.workers.dev';
-```
-
-管理密码只用于 Pages 后台。它与 GitHub 账号密码完全独立。
-
-会话使用 HttpOnly Cookie，默认 30 天；刷新页面不需要重新输入密码。
-
-## API
-
-- `POST /api/login`：后台密码登录，签发 30 天 HttpOnly 会话。
-- `GET /api/session`：检查当前会话。
-- `GET /api/discover`：直接读取 hw.json，解析 `lives[]` 为完整订阅地址列表，并保存 `output/subscriptions.json`。
-- `POST /api/selection`：安全保存订阅/频道选择。
-- `POST /api/pull`：触发 GitHub Actions 的 `channels` 阶段。
-- `GET /api/run`：查询最新 Source Hunter Actions 状态。
-- `GET /api/channels`：读取最新完整候选直播源。
+The Worker only accepts requests whose Origin matches `ALLOWED_ORIGIN`.
