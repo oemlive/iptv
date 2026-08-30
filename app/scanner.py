@@ -16,6 +16,7 @@ class Scanner:
             return await self._one(s)
     async def _one(self,s):
         started=time.perf_counter(); url=s['url']; p=protocol(url); timeout=float(self.cfg.get('timeout_seconds',6))
+        retry_timeout=float(self.cfg.get('probe_retry_seconds',10)); probe_deadline=timeout
         h=self.history.get('sources',{}).get(url,{})
         r={'source_id':s['id'],'name':s['name'],'url':url,'category':s.get('category') or classify(s['name'],s.get('group_name',''),url),
            'status':'dead','http_status':None,'latency_ms':None,'probe_ms':None,'first_frame_ms':None,
@@ -31,6 +32,14 @@ class Scanner:
                 r['latency_ms']=round((time.perf_counter()-started)*1000,1); r['status']='alive' if x.status_code<400 else 'dead'
             elif self.cfg.get('ffprobe_enabled',True) and shutil.which('ffprobe'):
                 r.update(await self.probe(url,timeout)); r['probe_ms']=round((time.perf_counter()-started)*1000,1); r['latency_ms']=r['probe_ms']
+                if not (r.get('video_codec') or r.get('audio_codec')):
+                    # Fast 6s probe first; only slow/retry failed candidates. This keeps the normal
+                    # path fast while allowing slow IPTV-TS/HLS endpoints to recover.
+                    probe_deadline=retry_timeout
+                    retry=await self.probe(url,retry_timeout,retry=True)
+                    for k,v in retry.items():
+                        if v is not None: r[k]=v
+                    r['probe_ms']=round((time.perf_counter()-started)*1000,1); r['latency_ms']=r['probe_ms']
                 r['status']='alive' if (r.get('video_codec') or r.get('audio_codec')) else 'dead'
             else:
                 async with httpx.AsyncClient(follow_redirects=True,timeout=timeout,headers={'User-Agent':self.cfg.get('user_agent','Source-Hunter-PRO')}) as c:
@@ -41,11 +50,15 @@ class Scanner:
         except (asyncio.TimeoutError, TimeoutError, subprocess.TimeoutExpired):
             r['status']='timeout'; r['error']=f'timeout > {timeout:.0f}s'
         except Exception as e: r['error']=str(e)[:300]
-        if (time.perf_counter()-started)>timeout+0.5 and r['status']!='alive': r['status']='timeout'; r['error']=f'over {timeout:.0f}s limit'
+        if (time.perf_counter()-started)>probe_deadline+0.5 and r['status']!='alive': r['status']='timeout'; r['error']=f'over {probe_deadline:.0f}s limit'
         self.db.save_scan(r); return r
-    async def probe(self,url,timeout):
+    async def probe(self,url,timeout,retry=False):
         def run():
-            args=['ffprobe','-v','error','-rw_timeout',str(int(timeout*1_000_000)),'-analyzeduration','2500000','-probesize','2500000','-show_streams','-show_format','-of','json',url]
+            analyze='5000000' if retry else '2500000'
+            probesize='5000000' if retry else '2500000'
+            args=['ffprobe','-v','error','-rw_timeout',str(int(timeout*1_000_000)),'-analyzeduration',analyze,'-probesize',probesize,'-show_streams','-show_format','-of','json',url]
+            if retry:
+                args[1:1]=['-fflags','+discardcorrupt','-reconnect','1','-reconnect_streamed','1','-reconnect_delay_max','2']
             p=subprocess.run(args,capture_output=True,text=True,timeout=timeout+0.7)
             d=json.loads(p.stdout or '{}'); d['_rc']=p.returncode; return d
         d=await asyncio.to_thread(run); ss=d.get('streams',[])
@@ -55,7 +68,7 @@ class Scanner:
             q,w=rr.split('/',1)
             try: fps=round(float(q)/float(w),2) if float(w) else None
             except Exception: pass
-        first=await self.first_frame(url,timeout)
+        first=await self.first_frame(url,min(timeout,3 if not retry else 5))
         return {'http_status':200,'width':v.get('width'),'height':v.get('height'),'fps':fps,'video_codec':v.get('codec_name'),'audio_codec':a.get('codec_name'),'first_frame_ms':first}
     async def first_frame(self,url,timeout):
         def run():

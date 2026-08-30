@@ -1,0 +1,8 @@
+name = "source-hunter-api"
+main = "worker.js"
+compatibility_date = "2026-08-30"
+
+[vars]
+REPO_OWNER = "oemlive"
+REPO_NAME = "iptv"
+ALLOWED_ORIGIN = "https://oemlive.github.io"

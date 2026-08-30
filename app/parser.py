@@ -70,6 +70,40 @@ def _walk_json(obj,base,out,default_name=''):
 def parse_json(text,base):
     out=[]; _walk_json(json.loads(text),base,out); return out
 
+def parse_subscription_catalog(text,base):
+    """Extract the second-level subscription URLs from a catalog JSON such as hw.json.
+    It intentionally does not treat lives[] entries as channels.  Each lives item is a
+    selectable source that will be fetched in the second stage.
+    """
+    obj=json.loads(text); out=[]
+    if isinstance(obj,dict) and isinstance(obj.get('lives'),list):
+        for item in obj['lives']:
+            if not isinstance(item,dict): continue
+            u=_norm_url(base,item.get('url',''))
+            if not u: continue
+            headers=item.get('headers') or {}
+            if item.get('ua') and 'User-Agent' not in headers: headers={**headers,'User-Agent':item['ua']}
+            out.append({
+                'name':str(item.get('name') or u).strip(), 'url':u, 'enabled':True,
+                'headers':headers, 'source_name':str(item.get('name') or '').strip(),
+                'player_type':item.get('playerType'), 'epg':item.get('epg') or '',
+                'logo':item.get('logo') or ''})
+        return out
+    # Generic fallback: recursively collect named URL objects only when there is no lives[] catalog.
+    def walk(x,default=''):
+        if isinstance(x,list):
+            for y in x: walk(y,default)
+        elif isinstance(x,dict):
+            name=x.get('name') or x.get('title') or default
+            u=x.get('url') or x.get('source')
+            if isinstance(u,str) and u.startswith(('http://','https://')):
+                out.append({'name':str(name or u),'url':_norm_url(base,u),'enabled':True,'headers':x.get('headers') or {},'source_name':str(name or ''),'player_type':x.get('playerType'),'epg':x.get('epg') or '','logo':x.get('logo') or ''})
+            else:
+                for k,v in x.items():
+                    if k not in ('headers','proxy','hosts','ads'): walk(v,name if isinstance(v,str) else default)
+    walk(obj)
+    return out
+
 def parse_xml(text,base):
     out=[]; root=ET.fromstring(text)
     for el in root.iter():

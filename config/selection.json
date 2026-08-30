@@ -2,10 +2,8 @@
   "version": 4,
   "selected_subscriptions": [],
   "selected_subscription_urls": [],
-  "selected_channels": {
-    "https://iptv.catvod.com/list.php?token=21b1c52aacc53c5d5d7d24810b779656502e3687398cd6a261ec4fa1deeabb19": false
-  },
+  "selected_channels": {},
   "excluded_channels": {},
   "default_selected": true,
-  "updated_at": "2026-08-30T08:57:53.540Z"
+  "updated_at": null
 }

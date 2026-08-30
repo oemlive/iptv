@@ -4,6 +4,7 @@ server:
 scanner:
   concurrency: 24
   timeout_seconds: 6
+  probe_retry_seconds: 10
   subscription_timeout_seconds: 20
   user_agent: Source-Hunter-PRO/11.1
   ffprobe_enabled: true
@@ -18,8 +19,8 @@ export:
   category_files: true
 github:
   enabled: true
-  owner: your-name
-  repo: your-repo
+  owner: oemlive
+  repo: iptv
   branch: main
   output_dir: output
 epg:
