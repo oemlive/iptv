@@ -5,7 +5,7 @@
  */
 // Leave empty to use the browser/local fallback. Set this to your deployed Worker URL to enable GitHub-backed management.
 window.SOURCE_HUNTER_API = '';
-window.SOURCE_HUNTER_ROOT_CATALOG = '';
+window.SOURCE_HUNTER_ROOT_CATALOG = 'https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json';
 // 无 Worker 模式：优先读取 GitHub Pages 同源的构建缓存 hw.json。
 // 构建缓存由 .github/workflows/pages.yml 在部署时从下面的官方内置入口抓取，
 // 因此浏览器不再直接请求 Gitee，避免 CORS/401 导致 Failed to fetch。
