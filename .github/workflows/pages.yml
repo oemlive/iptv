@@ -1,44 +1,20 @@
 name: Deploy WEB后台管理
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Refresh bundled catalog when upstream is reachable
-        shell: bash
-        run: |
-          set -e
-          URL='https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json'
-          TMP="$(mktemp)"
-          if curl -L --fail --silent --show-error --max-time 30 "$URL" -o "$TMP"; then
-            python - "$TMP" <<'PY'
-import json,sys
-p=sys.argv[1]
-d=json.load(open(p,encoding='utf-8'))
-if not isinstance(d.get('lives'),list) or not d['lives']:
-    raise SystemExit('invalid catalog: lives[] is empty')
-PY
-            cp "$TMP" data/hw.json
-            echo "Bundled catalog refreshed."
-          else
-            echo "Upstream unavailable; keeping the checked-in catalog snapshot."
-          fi
-          rm -f "$TMP"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
