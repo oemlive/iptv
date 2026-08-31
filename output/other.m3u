@@ -1,7 +1,0 @@
-#EXTM3U
-#EXTINF:-1 group-title="其他",catvod
-https://iptv.catvod.com/list.php?token=21b1c52aacc53c5d5d7d24810b779656502e3687398cd6a261ec4fa1deeabb19
-#EXTINF:-1 group-title="其他",develop202
-https://gh-proxy.com/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt
-#EXTINF:-1 group-title="其他",组播
-https://gh-proxy.com/https://raw.githubusercontent.com/q1017673817/iptvz/refs/heads/main/zubo_all.txt
