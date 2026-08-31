@@ -1,11 +1,8 @@
-name: Source Hunter - Deploy Pages
+name: Deploy WEB后台管理
 
 on:
   push:
     branches: [main]
-    paths:
-      - "admin/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,31 +11,36 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
+  group: pages
   cancel-in-progress: true
 
 jobs:
   deploy:
-    name: Build and deploy web admin
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Prepare site
+      - uses: actions/checkout@v4
+      - name: Refresh bundled catalog when upstream is reachable
+        shell: bash
         run: |
-          rm -rf _site
-          mkdir -p _site
-          cp admin/index.html _site/index.html
-          touch _site/.nojekyll
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+          set -e
+          URL='https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json'
+          TMP="$(mktemp)"
+          if curl -L --fail --silent --show-error --max-time 30 "$URL" -o "$TMP"; then
+            python - "$TMP" <<'PY'
+import json,sys
+p=sys.argv[1]
+d=json.load(open(p,encoding='utf-8'))
+if not isinstance(d.get('lives'),list) or not d['lives']:
+    raise SystemExit('invalid catalog: lives[] is empty')
+PY
+            cp "$TMP" data/hw.json
+            echo "Bundled catalog refreshed."
+          else
+            echo "Upstream unavailable; keeping the checked-in catalog snapshot."
+          fi
+          rm -f "$TMP"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          path: .
+      - uses: actions/deploy-pages@v4
