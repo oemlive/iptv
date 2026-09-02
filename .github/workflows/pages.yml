@@ -2,7 +2,8 @@ name: Deploy IPTV Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - 'web/**'
       - 'data/**'
@@ -22,22 +23,57 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/configure-pages@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Build site
+        shell: bash
         run: |
-          mkdir -p _site/iptv
-          cp -r web/* _site/iptv/
-          cp -r data _site/iptv/ || true
-          cp -r output _site/iptv/ || true
-          touch _site/iptv/.nojekyll
-      - uses: actions/upload-pages-artifact@v4
+          set -euo pipefail
+
+          rm -rf _site
+          mkdir -p _site
+
+          # 关键：
+          # web 的内容必须直接放在 Pages artifact 根目录
+          cp -r web/. _site/
+
+          # 数据目录
+          if [ -d data ]; then
+            cp -r data _site/
+          fi
+
+          # 输出目录
+          if [ -d output ]; then
+            cp -r output _site/
+          fi
+
+          # 防止 Jekyll 改写静态文件
+          touch _site/.nojekyll
+
+          # 强制检查入口文件
+          test -f _site/index.html
+
+          echo "===== Pages artifact ====="
+          find _site -maxdepth 3 -type f -print | sort
+
+          echo "===== index.html ====="
+          ls -lh _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-      - name: Deploy
+
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
