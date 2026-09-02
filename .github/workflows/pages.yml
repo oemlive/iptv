@@ -2,12 +2,12 @@ name: Deploy IPTV Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'web/**'
       - 'data/**'
       - 'output/**'
+      - 'config/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -23,11 +23,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,45 +33,46 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Build site
+      - name: Build Pages artifact
         shell: bash
         run: |
           set -euo pipefail
-
           rm -rf _site
           mkdir -p _site
-
-          # 关键：
-          # web 的内容必须直接放在 Pages artifact 根目录
           cp -r web/. _site/
-
-          # 数据目录
-          if [ -d data ]; then
-            cp -r data _site/
-          fi
-
-          # 输出目录
-          if [ -d output ]; then
-            cp -r output _site/
-          fi
-
-          # 防止 Jekyll 改写静态文件
+          [ ! -d data ] || cp -r data _site/
+          [ ! -d output ] || cp -r output _site/
+          [ ! -d config ] || cp -r config _site/
           touch _site/.nojekyll
-
-          # 强制检查入口文件
           test -f _site/index.html
-
-          echo "===== Pages artifact ====="
-          find _site -maxdepth 3 -type f -print | sort
-
-          echo "===== index.html ====="
-          ls -lh _site/index.html
+          echo '--- artifact root ---'
+          find _site -maxdepth 2 -type f -print | sort
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify deployed site
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          test -n "${PAGE_URL}"
+          echo "Deployed URL: ${PAGE_URL}"
+          for i in {1..12}; do
+            code=$(curl -L -sS -o /tmp/page.html -w '%{http_code}' "${PAGE_URL}" || true)
+            echo "Attempt ${i}: HTTP ${code}"
+            if [ "${code}" = "200" ] && grep -qi 'IPTV' /tmp/page.html; then
+              echo 'GitHub Pages smoke test passed.'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'GitHub Pages smoke test failed.'
+          exit 1
