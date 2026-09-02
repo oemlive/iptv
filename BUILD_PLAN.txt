@@ -1,0 +1,10 @@
+Advanced build plan
+- Static GitHub Pages frontend remains at /iptv/.
+- Backend crawler runs in GitHub Actions, never in Pages.
+- Results are committed to data/ and output/.
+- Frontend reads data/index.json and output files.
+- Manual local import/validation/export works without a backend.
+- Optional repository publishing is done by Actions, avoiding browser tokens.
+- SQLite is used by crawler runs; JSON snapshots are committed for Pages.
+- Validation requires ffprobe in CI and enforces 6s timeout + >=720p.
+- Quality score, audio/video checks, source history, blacklist, allowlist, category filters.
