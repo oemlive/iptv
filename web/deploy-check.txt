@@ -1,2 +1,0 @@
-IPTV Advanced 2.3
-Pages artifact root check: index.html must be at artifact root.
