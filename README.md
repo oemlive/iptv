@@ -2,7 +2,7 @@
 
 用于 `https://oemlive.github.io/iptv/` 的直播源采集、清洗、验证、评分和自动发布。
 
-## 2.1 核心架构
+## 2.2 核心架构
 
 ```text
 GitHub Pages 控制台
@@ -11,7 +11,7 @@ GitHub Pages 控制台
         ├── 查询 Actions runs ──→ 运行状态
         └── 保存 config/settings.json ──→ 调度配置
                                       │
-                           每 15 分钟唤醒一次
+                           每 5 分钟唤醒一次
                                       │
                     爬取 → 解析 → 验证 → 评分 → 输出
                                       │
@@ -46,6 +46,17 @@ GitHub Pages 控制台
 - Contents: Read and write（仅当需要网页保存调度配置时）
 
 Token 不要写进源码、workflow、URL、localStorage 或提交记录。
+
+## 2.2 关键稳定性修复
+
+- Pages artifact 同时发布 `web/`、`data/`、`output/`、`config/`，保证网页能读取调度配置。
+- 调度检查改为每 5 分钟一次，配置时间必须使用 5 分钟粒度，避免原来 `02:17` 这类时间永远无法命中的问题。
+- Actions 失败时也会尝试提交 `data/status.json`，避免失败状态只存在 Runner。
+- 网页连接 GitHub 时同时验证仓库和指定 Workflow 是否存在且处于 active。
+- 手动运行前检测已有 queued/in_progress 任务，减少重复触发。
+- 运行状态增加当前 Job/Step 展示。
+- 调度配置保存增加时间、星期、5 分钟粒度校验。
+- 修复旧版 `repository.py` 对不存在的 `settings.output_repo_url` 的运行时引用。
 
 ## 自检
 
@@ -83,3 +94,8 @@ output/4k.*
 data/status.json
 data/run-summary.json
 ```
+
+## GitHub Pages 部署路径
+
+本项目面向仓库 `oemlive/iptv` 的 Project Pages 地址 `https://oemlive.github.io/iptv/`。
+Pages artifact 的根目录必须直接包含 `index.html`；不能把站点再次放入 `_site/iptv/`，否则最终地址会变成 `/iptv/iptv/`，访问 `/iptv/` 会出现 404。
