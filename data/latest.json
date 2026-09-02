@@ -1,0 +1,1 @@
+{"status":"pending","meta":{"source_name":"hw.json","source_url":"https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json","finished_at":"","schedule":"每 30 分钟自动执行"},"stats":{"total":0,"valid":0,"invalid":0},"steps":{},"logs":["等待 GitHub Actions 第一次自动运行"]}
