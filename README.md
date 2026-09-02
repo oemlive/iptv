@@ -2,7 +2,7 @@
 
 用于 `https://oemlive.github.io/iptv/` 的直播源采集、清洗、验证、评分和自动发布。
 
-## 2.2 核心架构
+## 2.3 核心架构
 
 ```text
 GitHub Pages 控制台
@@ -47,7 +47,7 @@ GitHub Pages 控制台
 
 Token 不要写进源码、workflow、URL、localStorage 或提交记录。
 
-## 2.2 关键稳定性修复
+## 2.3 关键稳定性修复
 
 - Pages artifact 同时发布 `web/`、`data/`、`output/`、`config/`，保证网页能读取调度配置。
 - 调度检查改为每 5 分钟一次，配置时间必须使用 5 分钟粒度，避免原来 `02:17` 这类时间永远无法命中的问题。
@@ -66,6 +66,9 @@ python -m pytest -q
 ```
 
 ## 部署
+
+> **重要：压缩包解压后，必须把本目录内的文件直接放到目标仓库根目录。不要把 `advanced_live_source_v2` 这个目录再套一层。仓库根目录必须直接看到 `.github/`、`web/`、`config/`、`data/`。**
+
 
 1. 将源码放入目标仓库。
 2. Pages 使用 GitHub Actions 发布。
