@@ -1,0 +1,55 @@
+name: IPTV Crawl Validate Publish
+on:
+  workflow_dispatch:
+    inputs:
+      stability_seconds:
+        description: 连续稳定性检测秒数，0关闭
+        required: false
+        default: '0'
+        type: string
+      concurrency:
+        description: 验证并发，建议 8-20
+        required: false
+        default: '12'
+        type: string
+      force:
+        description: 手动运行时忽略定时配置
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    - cron: '*/15 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: iptv-crawler
+  cancel-in-progress: false
+jobs:
+  crawl:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run crawler
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          STABILITY_SECONDS: ${{ inputs.stability_seconds || '0' }}
+          MAX_CONCURRENCY: ${{ inputs.concurrency || '12' }}
+          MANUAL_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force || '0' }}
+        run: python scripts/run_crawler.py
+      - name: Commit generated data
+        run: |
+          git config user.name 'IPTV Automation Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data output
+          if git diff --cached --quiet; then echo 'No generated changes.'; else git commit -m 'auto: update validated live sources'; git push; fi
