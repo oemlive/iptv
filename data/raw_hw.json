@@ -1,45 +1,4 @@
 {
-  "status": "success",
-  "meta": {
-    "source_name": "hw.json",
-    "source_url": "https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json",
-    "finished_at": "2026-09-02 10:45:43 +0000",
-    "schedule": "每 30 分钟自动执行"
-  },
-  "stats": {
-    "total": 43,
-    "valid": 43,
-    "invalid": 0
-  },
-  "steps": {
-    "获取 hw.json": {
-      "ok": 1,
-      "message": "成功"
-    },
-    "JSON 解析": {
-      "ok": 1,
-      "message": "成功"
-    },
-    "数据标准化": {
-      "ok": 1,
-      "message": "43 条有效"
-    },
-    "地址检查": {
-      "ok": 1,
-      "message": "基础 URL 检查"
-    },
-    "结果生成": {
-      "ok": 1,
-      "message": "成功"
-    },
-    "发布完成": {
-      "ok": 1,
-      "message": "GitHub Pages"
-    }
-  },
-  "logs": [
-    "✓ 获取成功：备用源 1，第 1 次"
-  ],
   "lives": [
     {
       "name": "webview",
@@ -322,5 +281,63 @@
       "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     }
+  ],
+  "headers": [
+    {
+      "host": "gslbserv.itv.cmvideo.cn",
+      "header": {
+        "User-Agent": "okhttp/3.15"
+      }
+    }
+  ],
+  "proxy": [
+    "raw.bgithub.xyz",
+    "googlevideo.com",
+    "rihou.cc",
+    "cdn.v82u1l.com",
+    "cdn.iz8qkg.com",
+    "cdn.kin6c1.com",
+    "c.biggggg.com",
+    "c.olddddd.com",
+    "haiwaikan.com",
+    "www.histar.tv",
+    "youtube.com",
+    "uhibo.com",
+    ".*boku.*",
+    ".*nivod.*",
+    " jdshipin.com",
+    "163189.xyz",
+    "1678520.xyz",
+    " kkk.888.3116598.xyz",
+    " 101.qzz.io",
+    " cdn.loc.cc",
+    "1789.dpdns.org",
+    " pendy.dpdns.org",
+    " tvm4a1.cfd",
+    " docker.livednow.dpdns.org",
+    "4gtv.livednow.dpdns.org",
+    "iptv.mydiver.eu.org ",
+    "tv.iill.top",
+    "ofissaifreepc.akamaized.net",
+    "litvpc-hichannel.cdn.hinet.net",
+    "4gtvfree-cds.cdn.hinet.net",
+    "4gtvfree-mozai.4gtv.tv",
+    "4gtvfreepc-cds.cdn.hinet.net",
+    "ntd-tgc.cdn.hinet.net",
+    "api2.4gtv.tv",
+    " *.cdn.hinet.net",
+    "api2.4gtv.tv",
+    ".*ulivetv.*"
+  ],
+  "hosts": [
+    "hlsztemgsplive.miguvideo.com=hlsztemgsplive.miguvideo.com.b.cdn.chinamobile.com",
+    "cache.ott.ystenlive.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com",
+    "cache.ott.bestlive.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com",
+    "cache.ott.wasulive.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com",
+    "cache.ott.fifalive.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com",
+    "cache.ott.hnbblive.itv.cmvideo.cn=base-v4-free-mghy.e.cdn.chinamobile.com"
+  ],
+  "ads": [
+    "static-mozai.4gtv.tv"
   ]
 }
