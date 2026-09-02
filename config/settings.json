@@ -1,0 +1,39 @@
+{
+  "version": 3,
+  "validation": {
+    "timeout": 6,
+    "concurrency": 12,
+    "retry_count": 2,
+    "min_width": 1280,
+    "min_height": 720,
+    "stability_seconds": 0
+  },
+  "output": {
+    "max_per_channel": 5
+  },
+  "schedule": {
+    "enabled": true,
+    "timezone": "UTC",
+    "times": [
+      "02:00",
+      "08:00",
+      "14:00",
+      "20:00"
+    ],
+    "weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "granularity_minutes": 5
+  },
+  "sources": {
+    "github": true,
+    "gitee": true,
+    "manual": true
+  }
+}

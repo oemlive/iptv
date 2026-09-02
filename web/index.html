@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IPTV · 源管理中心</title><link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<header>
+  <div class="brand-wrap"><div class="brand">IPTV <span>SOURCE CENTER</span></div><div class="sub">直播源采集 · 验证 · 筛选 · 导出 · 自动更新</div></div>
+  <div class="header-actions"><span id="conn" class="pill public">公开模式</span><button id="helpBtn" class="ghost">？ 使用说明</button><button id="settingsBtn">⚙ 高级控制</button></div>
+</header>
+<main>
+  <section class="hero">
+    <div><div class="eyebrow">WELCOME</div><h1>一个页面，直接管理 IPTV 直播源</h1><p>不输入 PAT 也能查看数据、添加源地址、筛选和导出。GitHub PAT 只在你需要远程控制 Actions 或保存调度时才使用。</p></div>
+    <div class="quick"><span>① 输入源地址</span><span>② 加载/预览</span><span>③ 筛选并导出</span></div>
+  </section>
+
+  <section class="source-box panel">
+    <div class="title"><div><h2>🔗 直播源地址</h2><div class="hint">支持 M3U / M3U8 / TXT / 部分 JSON。地址只保存在本机浏览器，不会自动上传。</div></div><button id="clearSources">清空本地源</button></div>
+    <div class="source-input-row"><input id="sourceUrl" type="url" placeholder="例如：https://example.com/live.m3u 或 GitHub Raw 地址"><button id="loadSource" class="primary big">＋ 加载直播源</button></div>
+    <div class="source-actions"><button id="pasteSource">粘贴地址</button><button id="openSource">在新窗口打开</button><span id="sourceStatus" class="hint">还没有添加外部源</span></div>
+    <div id="localSources" class="chips"></div>
+  </section>
+
+  <section class="cards"><div class="accent-a"><b id="total">0</b><small>有效/已加载源</small></div><div class="accent-b"><b id="cctv">0</b><small>央卫</small></div><div class="accent-c"><b id="hktw">0</b><small>港台</small></div><div class="accent-d"><b id="other">0</b><small>其他</small></div><div class="accent-e"><b id="hd">0</b><small>1080P+</small></div></section>
+
+  <section class="panel">
+    <div class="title"><h2>⚡ 自动采集状态</h2><span id="runState">公开只读</span></div>
+    <div class="status-grid"><div><small>最新任务</small><b id="runName">-</b></div><div><small>状态</small><b id="runStatus">-</b></div><div><small>开始时间</small><b id="runTime">-</b></div><div><small>完成时间</small><b id="runEnd">-</b></div></div>
+    <div class="toolbar"><button id="runNow" class="primary">▶ 立即运行</button><button id="cancelRun">■ 取消</button><button id="rerunFailed">↻ 重跑失败</button><button id="refresh">↻ 刷新</button><a id="runLink" target="_blank" rel="noopener">打开任务</a></div>
+    <div id="summary" class="hint">等待最新结果</div><div id="notice" class="notice"></div>
+  </section>
+
+  <section class="panel"><div class="title"><div><h2>🧪 本次验证参数</h2><span class="hint">仅手动运行时生效</span></div></div>
+    <div class="formgrid"><label>验证并发<input id="concurrency" type="number" min="1" max="64" value="12"></label><label>稳定检测秒数<input id="stability" type="number" min="0" max="60" value="0"></label></div>
+  </section>
+
+  <section class="panel"><div class="title"><h2>🕒 自动调度</h2><span id="scheduleState">读取中</span></div>
+    <div class="toolbar"><label><input id="scheduleEnabled" type="checkbox" checked> 启用</label><label>时区 <input id="timezone" value="UTC" class="smallinput"></label><label>时间 <input id="times" value="02:00,08:00,14:00,20:00" class="wideinput"></label><label>星期 <input id="weekdays" value="0,1,2,3,4,5,6" class="wideinput"></label><button id="saveSchedule">保存调度</button></div>
+    <p class="hint">默认每 5 分钟检查一次。保存调度需要 GitHub PAT；不需要调度功能可以完全不配置 PAT。</p>
+  </section>
+
+  <section class="panel"><div class="title"><h2>🔎 源筛选</h2><span id="updated">等待数据</span></div>
+    <div class="toolbar"><input id="q" placeholder="搜索频道 / URL / 来源"><label><input type="checkbox" data-group="央卫">央卫</label><label><input type="checkbox" data-group="港台">港台</label><label><input type="checkbox" data-group="其他">其他</label><button id="all">全选</button><button id="none">全不选</button><button id="valid">仅有效</button></div>
+    <div class="toolbar subfilters"><label><input type="checkbox" data-sub="影视">影视</label><label><input type="checkbox" data-sub="少儿">少儿</label><label><input type="checkbox" data-sub="体育">体育</label><label><input type="checkbox" data-sub="新闻">新闻</label><label><input type="checkbox" data-sub="国外">国外</label><label><input type="checkbox" data-sub="4K">4K</label></div>
+  </section>
+
+  <section class="panel"><div class="title"><h2>📺 直播源列表</h2><div class="toolbar"><button id="exportTxt">导出 TXT</button><button id="exportM3u">导出 M3U</button><button id="exportConfig">导出选择配置</button></div></div>
+    <div class="tablewrap"><table><thead><tr><th><input id="head" type="checkbox"></th><th>频道</th><th>分类</th><th>分辨率</th><th>音频</th><th>延迟</th><th>评分</th><th>状态</th><th>来源</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+
+  <section class="panel"><h2>📦 官方输出</h2><div class="links"><a href="./output/live.m3u">live.m3u</a><a href="./output/live.txt">live.txt</a><a href="./output/cctv.m3u">央卫</a><a href="./output/hk_tw.m3u">港台</a><a href="./output/other.m3u">其他</a><a href="./output/sports.m3u">体育</a><a href="./output/kids.m3u">少儿</a><a href="./data/run-summary.json">最新报告</a></div></section>
+</main>
+
+<div id="helpModal" class="modal hidden"><div class="modalbox"><div class="title"><h2>📖 怎么用？</h2><button id="closeHelp">×</button></div>
+  <div class="guide"><div><b>1. 直接看结果</b><p>打开页面即可查看仓库自动生成的直播源。无需 PAT。</p></div><div><b>2. 添加自己的源</b><p>把 M3U/TXT 地址粘贴到“直播源地址”，点击“加载直播源”。成功后会在本机预览并可筛选、导出。</p></div><div><b>3. 控制 GitHub Actions</b><p>点击“高级控制”，填写仓库信息。PAT 是 GitHub 的远程操作凭证，只有“立即运行 / 取消 / 重跑 / 保存调度”才需要。</p></div><div><b>4. 加载失败怎么办？</b><p>很多直播源服务器禁止浏览器跨域（CORS）。这种情况下不是地址一定失效，而是浏览器不允许网页直接读取；可把地址交给仓库爬虫验证，或使用 GitHub Raw 等允许跨域的地址。</p></div></div>
+</div></div>
+
+<div id="modal" class="modal hidden"><div class="modalbox"><div class="title"><div><h2>⚙ GitHub 高级控制</h2><div class="hint">公开查看不需要 PAT；仅执行远程写操作时才需要。</div></div><button id="closeModal">×</button></div>
+  <div class="formgrid"><label>Owner<input id="owner" value="oemlive" placeholder="oemlive"></label><label>Repository<input id="repo" value="iptv" placeholder="iptv"></label><label>Workflow 文件<input id="workflow" value="crawl.yml"></label><label>分支<input id="branch" value="main"></label></div>
+  <label>PAT（可选）<input id="token" type="password" autocomplete="off" placeholder="只有控制 Actions / 保存调度时才填写"></label>
+  <div class="toolbar"><button id="connect" class="primary">测试公开仓库</button><button id="disconnect">清除 PAT</button></div>
+  <p class="hint">PAT 仅保存在当前页面内存，刷新后清除。不要写入仓库、URL、localStorage 或代码。建议 Fine-grained PAT，仅授予目标仓库必要权限。</p>
+</div></div>
+<script src="./app.js"></script></body></html>
