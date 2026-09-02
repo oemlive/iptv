@@ -1,1 +1,332 @@
-{"status":"pending","meta":{"source_name":"hw.json","source_url":"https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json","finished_at":"","schedule":"每 30 分钟自动执行"},"stats":{"total":0,"valid":0,"invalid":0},"steps":{},"logs":["等待 GitHub Actions 第一次运行"],"txt":"","lives":[]}
+{
+  "status": "success",
+  "meta": {
+    "source_name": "hw.json",
+    "source_url": "https://raw.giteeusercontent.com/oemive/iptv/raw/master/hw.json",
+    "finished_at": "2026-09-02 12:06:24 +0000",
+    "schedule": "每 30 分钟自动执行"
+  },
+  "stats": {
+    "total": 43,
+    "valid": 43,
+    "invalid": 0,
+    "duplicates_removed": 0
+  },
+  "steps": {
+    "获取 hw.json": {
+      "ok": true,
+      "message": "成功"
+    },
+    "JSON 解析": {
+      "ok": true,
+      "message": "43 条"
+    },
+    "数据标准化": {
+      "ok": true,
+      "message": "43 条有效"
+    },
+    "地址检查": {
+      "ok": true,
+      "message": "HTTP/HTTPS URL 格式检查"
+    },
+    "TXT 生成": {
+      "ok": true,
+      "message": "43 行"
+    },
+    "发布完成": {
+      "ok": true,
+      "message": "完成"
+    }
+  },
+  "logs": [
+    "2026-09-02 12:06:24 +0000 ✓ 获取 hw.json",
+    "2026-09-02 12:06:24 +0000 ✓ 解析 43 条",
+    "2026-09-02 12:06:24 +0000 ✓ 有效 43 / 异常 0",
+    "2026-09-02 12:06:24 +0000 ✓ 生成 TXT 43 行",
+    "2026-09-02 12:06:24 +0000 ✓ 发布完成"
+  ],
+  "txt": "webview,https://gitee.com/oemive/iptv/raw/master/tv\ncatvod,https://iptv.catvod.com/list.php?token=21b1c52aacc53c5d5d7d24810b779656502e3687398cd6a261ec4fa1deeabb19\nok,https://ds65.tv1288.xyz\nhzxs800274,https://gitee.com/hzxs800274/iptv/raw/master/live/TV\n组播,https://gh-proxy.com/https://raw.githubusercontent.com/q1017673817/iptvz/refs/heads/main/zubo_all.txt\nMoMo,https://gh-proxy.com/https://raw.githubusercontent.com/jn950/live/refs/heads/main/tv/pllive.txt\ndevelop202,https://gh-proxy.com/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt\nlwr851,https://gitee.com/lwr851/live/raw/master/iptv.m3u\n潇雨萌萌,http://43.251.226.110:9991/qm0jue\n🚓广东联通,https://gitee.com/hw2837/iptv/raw/master/hw\nfzl,https://jk.fzl4k.xyz/8/api.php?zb=zb3\nzwssina,https://gitee.com/zwssina/yunduanyuan/raw/master/SB\nsmart,https://tmxk.pp.ua/smart-cn.m3u\n📺全国组播,https://d.kstore.dev/download/8344/全国组播.txt\n5266,https://5266.kstore.space/xiangxichuanshuo.txt\nTVBox_live,https://supprise0901.github.io/TVBox_live/live.txt\n74体育(M3U),http://iptv.cqshushu.com/74001.php?type=m3u&token=b84e7ca3a946e275344e0252b21058a7\n88KQ(M3U),http://iptv.cqshushu.com/88kq.php?p=video&type=m3u&token=b84e7ca3a946e275344e0252b21058a7\n807(M3U),http://iptv.cqshushu.com/iptv807.php?jk=m3u&token=b84e7ca3a946e275344e0252b21058a7\nJRS04(M3U),http://iptv.cqshushu.com/jrs.php?p=m3u8&type=m3u&token=b84e7ca3a946e275344e0252b21058a7\nbeesport(M3U),http://iptv.cqshushu.com/beesport.php?token=b84e7ca3a946e275344e0252b21058a7\nchina,https://freetv.fun/test_channels_china_original_new.txt\n🦄港奥台国际,http://tv123.vvvv.ee/tv.m3u\n🦄74源,https://im5k.fun/vip.m3u\nhong_kong,https://freetv.fun/test_channels_hong_kong_original_new.txt\ntaiwan,https://freetv.fun/test_channels_taiwan_original_new.txt\n🦄港台,https://feer-cdn-bp.xpnb.qzz.io/xnkl.txt\n卡卡西线路,https://gh-proxy.com/https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv4.txt\nx22c,https://raw.bgithub.xyz/x22c/okk/refs/heads/master/output/ipv4/result.m3u\n青龙电视,https://d.kstore.dev/download/15366/6988.txt\n测试2,http://php.946985.filegear-sg.me/test.m3u\n测试3,http://38.75.136.137:88/api/tvlist.php\niptv,https://gitee.com/hw2837/iptv/raw/master/iptv\n💔💎易发APP💎💔,https://gh-proxy.org/https:/raw.githubusercontent.com/fafa002/yf2025/refs/heads/main/yiyifafa.txt\n📺fleung49,https://gh-proxy.com/https://raw.githubusercontent.com/fleung49/star/refs/heads/main/mit\nKimentanm,https://raw.bgithub.xyz/Kimentanm/aptv/refs/heads/master/m3u/iptv.m3u\n💔gggg.nzk💔,http://rihou.cc:555/gggg.nzk\n🌸itvlist,https://gh-proxy.org/https:/raw.githubusercontent.com/mzky/checklist/refs/heads/master/itvlist.m3u\nkimwang1978,https://ghproxy.net/raw.githubusercontent.com/kimwang1978/collect-txt/refs/heads/main/bbxx.txt\ngggg.nzk,http://rihou.cc:555/gggg.nzk\n🍑4666888💔,http://iptv.4666888.xyz/FYTV.m3u\n🧑🏻‍🌾♾️🍄PizazzGY🧑🏻‍🌾,https://raw.bgithub.xyz/PizazzGY/TV/refs/heads/master/output/ipv4/result.txt\n🐟🐟🍄szwxk🍄🐟🐟,https://gitee.com/szwxk/watch-television/raw/master/wxk1.m3u\n",
+  "lives": [
+    {
+      "name": "webview",
+      "type": 0,
+      "url": "https://gitee.com/oemive/iptv/raw/master/tv",
+      "ext": {}
+    },
+    {
+      "name": "catvod",
+      "type": 0,
+      "url": "https://iptv.catvod.com/list.php?token=21b1c52aacc53c5d5d7d24810b779656502e3687398cd6a261ec4fa1deeabb19",
+      "ext": {}
+    },
+    {
+      "name": "ok",
+      "type": 0,
+      "url": "https://ds65.tv1288.xyz",
+      "ext": {}
+    },
+    {
+      "name": "hzxs800274",
+      "type": 0,
+      "url": "https://gitee.com/hzxs800274/iptv/raw/master/live/TV",
+      "ext": {}
+    },
+    {
+      "name": "组播",
+      "type": 0,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/q1017673817/iptvz/refs/heads/main/zubo_all.txt",
+      "ext": {}
+    },
+    {
+      "name": "MoMo",
+      "type": 0,
+      "playerType": 2,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/jn950/live/refs/heads/main/tv/pllive.txt",
+      "ext": {}
+    },
+    {
+      "name": "develop202",
+      "type": 0,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/develop202/migu_video/refs/heads/main/interface.txt",
+      "playerType": 2,
+      "ua": "okhttp/3",
+      "epg": "https://epg.112114.eu.org/?ch={name}&date={date}",
+      "logo": "https://epg.112114.eu.org/logo/{name}.png"
+    },
+    {
+      "name": "lwr851",
+      "type": 0,
+      "url": "https://gitee.com/lwr851/live/raw/master/iptv.m3u",
+      "ext": {}
+    },
+    {
+      "name": "潇雨萌萌",
+      "type": 0,
+      "url": "http://43.251.226.110:9991/qm0jue",
+      "ext": {}
+    },
+    {
+      "name": "🚓广东联通",
+      "type": 0,
+      "url": "https://gitee.com/hw2837/iptv/raw/master/hw",
+      "epg": "http://epg.112114.eu.org/?ch={name}&date={date}"
+    },
+    {
+      "name": "fzl",
+      "type": 0,
+      "playerType": 2,
+      "url": "https://jk.fzl4k.xyz/8/api.php?zb=zb3",
+      "epg": "http://epg.112114.eu.org/?ch={name}&date={date}"
+    },
+    {
+      "name": "zwssina",
+      "url": "https://gitee.com/zwssina/yunduanyuan/raw/master/SB",
+      "playerType": 2,
+      "ua": "Goiptv/8.8.8",
+      "ext": {}
+    },
+    {
+      "name": "smart",
+      "type": 0,
+      "url": "https://tmxk.pp.ua/smart-cn.m3u",
+      "ext": {}
+    },
+    {
+      "name": "📺全国组播",
+      "type": 0,
+      "url": "https://d.kstore.dev/download/8344/全国组播.txt",
+      "ua": "Goiptv/8.8.8",
+      "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}"
+    },
+    {
+      "name": "5266",
+      "url": "https://5266.kstore.space/xiangxichuanshuo.txt"
+    },
+    {
+      "name": "TVBox_live",
+      "type": 0,
+      "url": "https://supprise0901.github.io/TVBox_live/live.txt",
+      "ext": {}
+    },
+    {
+      "name": "74体育(M3U)",
+      "url": "http://iptv.cqshushu.com/74001.php?type=m3u&token=b84e7ca3a946e275344e0252b21058a7"
+    },
+    {
+      "name": "88KQ(M3U)",
+      "url": "http://iptv.cqshushu.com/88kq.php?p=video&type=m3u&token=b84e7ca3a946e275344e0252b21058a7"
+    },
+    {
+      "name": "807(M3U)",
+      "url": "http://iptv.cqshushu.com/iptv807.php?jk=m3u&token=b84e7ca3a946e275344e0252b21058a7"
+    },
+    {
+      "name": "JRS04(M3U)",
+      "url": "http://iptv.cqshushu.com/jrs.php?p=m3u8&type=m3u&token=b84e7ca3a946e275344e0252b21058a7"
+    },
+    {
+      "name": "beesport(M3U)",
+      "url": "http://iptv.cqshushu.com/beesport.php?token=b84e7ca3a946e275344e0252b21058a7"
+    },
+    {
+      "name": "china",
+      "type": "0",
+      "ua": "okhttp/3.8.1",
+      "url": "https://freetv.fun/test_channels_china_original_new.txt",
+      "ext": {}
+    },
+    {
+      "name": "🦄港奥台国际",
+      "type": 0,
+      "ua": "okhttp",
+      "url": "http://tv123.vvvv.ee/tv.m3u"
+    },
+    {
+      "name": "🦄74源",
+      "type": 0,
+      "playerType": 1,
+      "ua": "okhttp",
+      "url": "https://im5k.fun/vip.m3u"
+    },
+    {
+      "name": "hong_kong",
+      "type": "0",
+      "ua": "okhttp/3.8.1",
+      "url": "https://freetv.fun/test_channels_hong_kong_original_new.txt",
+      "ext": {}
+    },
+    {
+      "name": "taiwan",
+      "type": "0",
+      "ua": "okhttp/3.8.1",
+      "url": "https://freetv.fun/test_channels_taiwan_original_new.txt",
+      "ext": {}
+    },
+    {
+      "name": "🦄港台",
+      "type": 0,
+      "ua": "okhttp",
+      "url": "https://feer-cdn-bp.xpnb.qzz.io/xnkl.txt"
+    },
+    {
+      "name": "卡卡西线路",
+      "type": 0,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/kakaxi-1/IPTV/main/ipv4.txt",
+      "epg": "http://epg.112114.eu.org/?ch={name}&date={date}"
+    },
+    {
+      "name": "x22c",
+      "type": 0,
+      "url": "https://raw.bgithub.xyz/x22c/okk/refs/heads/master/output/ipv4/result.m3u",
+      "ext": {}
+    },
+    {
+      "name": "青龙电视",
+      "type": 0,
+      "url": "https://d.kstore.dev/download/15366/6988.txt",
+      "ext": {}
+    },
+    {
+      "name": "测试2",
+      "type": 0,
+      "url": "http://php.946985.filegear-sg.me/test.m3u",
+      "ext": {}
+    },
+    {
+      "name": "测试3",
+      "type": 0,
+      "url": "http://38.75.136.137:88/api/tvlist.php",
+      "ext": {}
+    },
+    {
+      "name": "iptv",
+      "type": 0,
+      "url": "https://gitee.com/hw2837/iptv/raw/master/iptv",
+      "ua": "okhttp/3.15,AptvPlayer/1.4.0",
+      "ext": {}
+    },
+    {
+      "name": "💔💎易发APP💎💔",
+      "type": 0,
+      "url": "https://gh-proxy.org/https:/raw.githubusercontent.com/fafa002/yf2025/refs/heads/main/yiyifafa.txt",
+      "playerType": 1,
+      "epg": "https://epg.112114.eu.org/?ch={name}&date={date}",
+      "logo": "https://epg.112114.eu.org/logo/{name}.png"
+    },
+    {
+      "name": "📺fleung49",
+      "type": 0,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/fleung49/star/refs/heads/main/mit",
+      "playerType": 2,
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "Kimentanm",
+      "type": 0,
+      "url": "https://raw.bgithub.xyz/Kimentanm/aptv/refs/heads/master/m3u/iptv.m3u",
+      "ext": {}
+    },
+    {
+      "name": "💔gggg.nzk💔",
+      "type": 0,
+      "url": "http://rihou.cc:555/gggg.nzk",
+      "playerType": 1,
+      "ua": "okhttp/3",
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.eu.org/logo/{name}.png"
+    },
+    {
+      "name": "🌸itvlist",
+      "type": 0,
+      "url": "https://gh-proxy.org/https:/raw.githubusercontent.com/mzky/checklist/refs/heads/master/itvlist.m3u",
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.eu.org/logo/{name}.png"
+    },
+    {
+      "name": "kimwang1978",
+      "url": "https://ghproxy.net/raw.githubusercontent.com/kimwang1978/collect-txt/refs/heads/main/bbxx.txt",
+      "playerType": 2,
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "gggg.nzk",
+      "boot": true,
+      "type": 0,
+      "url": "http://rihou.cc:555/gggg.nzk",
+      "playerType": 2,
+      "ua": "Goiptv/8.8.8",
+      "epg": "https://epg.112114.eu.org/?ch={name}&date={date}",
+      "logo": "https://epg.112114.eu.org/logo/{name}.png",
+      "core": {
+        "auth": "local://tvbus",
+        "name": "123",
+        "pass": "345",
+        "resp": "{\"result_code\":\"0\",\"result\":\"ok\",\"keys\":{\"user_id\":\"0027000005f5c398\",\"peer_id\":\"0ec044591d9e1418\",\"session_key\":\"0a49662f37674af5\"}}",
+        "so": "http://rihou.cc:555/tvbus.so",
+        "pkg": "com.svc.vlive.home.ytv9x",
+        "sign": "308203533082023ba00302010202042108f284300d06092a864886f70d01010b05003059310c300a0603550406130378797a310d300b060355040813047a7a7979310d300b0603550407130479787978310d300b060355040a130478797879310d300b060355040b130479797878310d300b06035504031304787879793020170d3139303332363038333233305a180f32313139303330323038333233305a3059310c300a0603550406130378797a310d300b060355040813047a7a7979310d300b0603550407130479787978310d300b060355040a130478797879310d300b060355040b130479797878310d300b060355040313047878797930820122300d06092a864886f70d01010105000382010f003082010a0282010100bb3298eb5910860b7ae30b6b874ca374667133fd08cbf42bb52d5c1a49e0fe4818fc768f5155a95eacc465d8649467c40ce632081297fb66c6838534ee4221e3d2b6b56060fdde5569e37465852f9daa3a987bff4f013981c9ff063b7e0ca7d52ccacfeddbe066bcc29780d78e929ad9dacc3b804f51c9eb0548aac4803b0d32764135d6d8d987381adea6d5ec34966aebdec717c95e064e203a3ba6d10bf8336eae43a01ca42406055c62312c6ed057afb386cd12b0b54ac1611e6e1fef8e71c8da0597a43f542e645f54e614c2603b58ce3690e69e0da24e944eecacdcf6faa2043ccce1f15860432527b706269510cd6bd8314999fa870fb8825a1e1805070203010001a321301f301d0603551d0e041604149fcb5d4d1dd5743459052b9ab79539ebc8924570300d06092a864886f70d01010b05000382010100658ddae3d7833e5b7cbf504cc016deda2cee97cb2b0bbdb889d06f19860389904ffcdf0f21966299d4c0e19d109065bdd769977f1a67d4928fecdee48eb3c7ce5fb4009653510b9897bdc66aa54a29930ed5c27cbd3a75c4362944afa4625a7c7f0d3e77bcaf8f23d9233ad9c83d33305c88f6110f6d50de9eec1c47135fff99826bc79c88355f99d41c00eb54a7292c44a340fb78d3ac1acf39ad0d13bccc2fdf69e1d86504ae4087a4b59a662986a4e03c0b379f92dce5c8c9da54e164f9480c8a9fed01bcc562640b78adaaa5adcfda0e03a477ea63ec136819298e55f428f74076c1b444556001b84cbd5d47b080b6aeb5f1a567c03ea6a64a9c2876e3b2"
+      }
+    },
+    {
+      "name": "🍑4666888💔",
+      "url": "http://iptv.4666888.xyz/FYTV.m3u",
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "🧑🏻‍🌾♾️🍄PizazzGY🧑🏻‍🌾",
+      "url": "https://raw.bgithub.xyz/PizazzGY/TV/refs/heads/master/output/ipv4/result.txt",
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "🐟🐟🍄szwxk🍄🐟🐟",
+      "type": 0,
+      "url": "https://gitee.com/szwxk/watch-television/raw/master/wxk1.m3u",
+      "epg": "http://epg.112114.xyz/?ch={name}&date={date}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    }
+  ]
+}
